@@ -1,12 +1,12 @@
 {include file="header.tpl" jsload = "ajax"  jsload1 = "tinymce" }
 {include file="tabsmenue-project.tpl" taskstab = "active"}
-
+<script type = "text/javascript" src = "include/js/taskcomments.js"></script>
 <div id="content-left">
 <div id="content-left-in">
 <div class="tasks">
 
 	{*System Message*}
-	<div class="infowin_left" style="display:none;" id="systemmsg">
+	<div class="infowin_left" style = "display:none;" id = "systemmsg">
 		{if $mode == "added"}
 			<span class="info_in_green"><img src="templates/standard/images/symbols/task.png" alt=""/>{#taskwasadded#}</span>
 		{elseif $mode == "edited"}
@@ -87,7 +87,7 @@
 				</div>
 
 				<h2>
-					<a href="managetasklist.php?action=showtasklist&amp;id={$project.ID}&amp;tlid={$lists[list].ID}" title="{#tasklist#} {$lists[list].name}"><img src="./templates/standard/images/symbols/tasklist.png" alt="" />{$lists[list].name|truncate:70:"...":true}</a>
+					<a href="managetasklist.php?action=showtasklist&amp;id={$project.ID}&amp;tlid={$lists[list].ID}" title="{#tasklist#} {$lists[list].name}"><img src="./templates/standard/images/symbols/tasklist.png" alt="" />[{#priority#}: {$lists[list].priority}] {$lists[list].name|truncate:50:"...":true}</a>
 				</h2>
 			</div>
 
@@ -106,16 +106,17 @@
 						<thead>
 							<tr>
 								<th class="a"></th>
-								<th class="b">{#tasks#}</th>
-								<th class="c">{#user#}</th>
-								<th class="days" style="text-align:right">{#daysleft#}&nbsp;&nbsp;</th>
+								<th class="b" style="width:330px;">{#tasks#}</th>
+								<th class="c" style="width:150px;">{#user#}</th>
+								<th class="cf" style="width:50px">{#priority#}</th>
+								<th class="days" style="width:27px; text-align:right;">{#daysleft#}</th>
 								<th class="tools"></th>
 							</tr>
 						</thead>
 
 						<tfoot>
 							<tr>
-								<td colspan="5"></td>
+								<td colspan="6"></td>
 							</tr>
 						</tfoot>
 
@@ -149,24 +150,25 @@
 											<a href="manageuser.php?action=profile&amp;id={$lists[list].tasks[task].users[theusers].ID}">{$lists[list].tasks[task].users[theusers].name|truncate:30:"...":true}</a>
 										{/section}
 									</td>
+									<td>{$lists[list].tasks[task].priority}</td>
 									<td style="text-align:right">{$lists[list].tasks[task].daysleft}&nbsp;&nbsp;</td>
 									<td class="tools">
 										{if $userpermissions.tasks.edit}
-											<a class="tool_edit" href="javascript:void(0);" onclick="change('managetask.php?action=editform&amp;tid={$lists[list].tasks[task].ID}&amp;id={$project.ID}','form_{$lists[list].ID}');toggleClass(this,'tool_edit_active','tool_edit');blindtoggle('form_{$lists[list].ID}');" title="{#edit#}"></a>
-										{/if}
+										<a class="tool_edit" href="managetask.php?action=editform&amp;tid={$lists[list].tasks[task].ID}&amp;id={$project.ID}" title="{#edit#}"></a>{/if}
 										{if $userpermissions.tasks.del}
-											<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'task_{$lists[list].tasks[task].ID}\',\'managetask.php?action=del&amp;tid={$lists[list].tasks[task].ID}&amp;id={$project.ID}\')');"  title="{#delete#}"></a>
+										<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'task_{$lists[list].tasks[task].ID}\',\'managetask.php?action=del&amp;tid={$lists[list].tasks[task].ID}&amp;id={$project.ID}\')');"  title="{#delete#}"></a>
 										{/if}
 									</td>
 								</tr>
 
 								<tr class="acc">
-									<td colspan="5">
+									<td colspan="6">
 										<div class="accordion_toggle"></div>
 										<div class="accordion_content">
 											<div class="acc-in">
-												<div class="message-in">
+												<div class="message-in" style = "overflow-x:hidden;">
 													{$lists[list].tasks[task].text|nl2br}
+														{include file = "ptasksComments.tpl" taskId = $lists[list].tasks[task].ID}
 												</div>
 											</div>
 										</div>
@@ -187,9 +189,10 @@
 
 								<tr>
 									<td class="a"></td>
-									<td class="b"><span id="toggle-done-{$lists[list].ID}" class="acc-toggle">{#donetasks#}</span></td>
-									<td class="c"></td>
-									<td class="days"></td>
+									<td class="b" style="width:330px;"><span id="toggle-done-{$lists[list].ID}" class="acc-toggle">{#donetasks#}</span></td>
+									<td class="c" style="width:150px;"></td>
+									<td class="cf" style="width:50px;"></td>
+									<td class="days" style="width:27px;"></td>
 									<td class="tools"></td>
 								</tr>
 
@@ -208,7 +211,7 @@
 
 									<tr>
 										<td class="a">{if $userpermissions.tasks.close}<a class="butn_checked" href="javascript:closeElement('task_{$lists[list].oldtasks[oldtask].ID}','managetask.php?action=open&amp;tid={$lists[list].oldtasks[oldtask].ID}&amp;id={$project.ID}');" title="{#open#}"></a>{/if}</td>
-										<td class="b">
+										<td class="b" style="width:330px;">
 											<div class="toggle-in">
 											<span class="acc-toggle" onclick="javascript:accord_done_{$lists[list].ID}.activate($$('#done_{$lists[list].ID} .accordion_toggle')[{$smarty.section.oldtask.index}]);toggleAccordeon('done_{$lists[list].ID}',this);"></span>
 												<a href="managetask.php?action=showtask&amp;tid={$lists[list].oldtasks[oldtask].ID}&amp;id={$lists[list].oldtasks[oldtask].project}" title="{$lists[list].oldtasks[oldtask].title}">
@@ -220,11 +223,12 @@
 												</a>
 											</div>
 										</td>
-										<td class="c"><a href="manageuser.php?action=profile&amp;id={$lists[list].oldtasks[oldtask].user_id}">{$lists[list].oldtasks[oldtask].user|truncate:23:"...":true}</a></td>
-										<td class="days" style="text-align:right">{$lists[list].oldtasks[oldtask].daysleft}&nbsp;&nbsp;</td>
+										<td class="c" style="width:150px;"><a href="manageuser.php?action=profile&amp;id={$lists[list].oldtasks[oldtask].user_id}">{$lists[list].oldtasks[oldtask].user|truncate:23:"...":true}</a></td>
+										<td class="cf" style="width:50px;">{$lists[list].oldtasks[oldtask].priority}</td>
+										<td class="days" style="width:27px; text-align:right">{$lists[list].oldtasks[oldtask].daysleft}&nbsp;&nbsp;</td>
 										<td class="tools">
 											{if $userpermissions.tasks.edit}
-												<a class="tool_edit" href="javascript:void(0);" onclick="change('managetask.php?action=editform&amp;tid={$lists[list].oldtasks[oldtask].ID}&amp;id={$project.ID}','form_{$lists[list].ID}');toggleClass(this,'tool_edit_active','tool_edit');blindtoggle('form_{$lists[list].ID}');" title="{#edit#}"></a>
+												<a class="tool_edit" href="managetask.php?action=editform&amp;tid={$lists[list].oldtasks[oldtask].ID}&amp;id={$project.ID}" title="{#edit#}"></a>
 											{/if}
 											{if $userpermissions.tasks.del}
 												<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'task_{$lists[list].oldtasks[oldtask].ID}\',\'managetask.php?action=del&amp;tid={$lists[list].oldtasks[oldtask].ID}&amp;id={$project.ID}\')');"  title="{#delete#}"></a>

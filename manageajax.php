@@ -26,11 +26,13 @@ $project = array('ID' => $id);
 $template->assign("project", $project);
 
 $pro = new project();
-if (!$id) {
+if (!$id)
+{
     $id = 0;
 }
 $template->assign("id", $id);
-if ($action == "timeline1next") {
+if ($action == "timeline1next")
+{
     $start = $start + 7;
     $end = $end + 7;
     $today = date("d");
@@ -39,7 +41,8 @@ if ($action == "timeline1next") {
     $timeline1 = $pro->getTimeline($id, $start, $end);
 
     $timestring = array();
-    foreach($timestr as $times) {
+    foreach($timestr as $times)
+    {
         $times = $langfile[$times];
         array_push($timestring, $times);
     }
@@ -52,7 +55,8 @@ if ($action == "timeline1next") {
     $template->assign("today", $today);
 
     $template->display("mileview1.tpl");
-} elseif ($action == "timeline1prev") {
+} elseif ($action == "timeline1prev")
+{
     $start = $start - 7;
     $end = $end - 7;
 
@@ -62,7 +66,8 @@ if ($action == "timeline1next") {
     $timeline1 = $pro->getTimeline($id, $start, $end);
 
     $timestring = array();
-    foreach($timestr as $times) {
+    foreach($timestr as $times)
+    {
         $times = $langfile[$times];
         array_push($timestring, $times);
     }
@@ -75,7 +80,8 @@ if ($action == "timeline1next") {
     $template->assign("today", $today);
 
     $template->display("mileview1.tpl");
-} elseif ($action == "timeline2next") {
+} elseif ($action == "timeline2next")
+{
     $start = $start + 7;
     $end = $end + 7;
     $today = date("d");
@@ -88,7 +94,8 @@ if ($action == "timeline1next") {
     $end = $end + 7;
     $timeline2 = $pro->getTimeline($id, $start, $end);
     $timestring = array();
-    foreach($timestr as $times) {
+    foreach($timestr as $times)
+    {
         $times = $langfile[$times];
         array_push($timestring, $times);
     }
@@ -102,7 +109,8 @@ if ($action == "timeline1next") {
     $template->assign("today", $today);
 
     $template->display("mileview2.tpl");
-} elseif ($action == "timeline2prev") {
+} elseif ($action == "timeline2prev")
+{
     $start = $start - 7;
     $end = $end - 7;
     $today = date("d");
@@ -116,7 +124,8 @@ if ($action == "timeline1next") {
     $timeline1 = $pro->getTimeline($id, $start, $end);
 
     $timestring = array();
-    foreach($timestr as $times) {
+    foreach($timestr as $times)
+    {
         $times = $langfile[$times];
         array_push($timestring, $times);
     }
@@ -130,18 +139,21 @@ if ($action == "timeline1next") {
     $template->assign("today", $today);
 
     $template->display("mileview2.tpl");
-} elseif ($action == "makeinputs") {
+} elseif ($action == "makeinputs")
+{
     $num = getArrayVal($_GET, "num");
     $file = $langfile["file"] . ":";
     $title = $langfile["title"] . ":";
     $tags = $langfile["tags"] . ":";
 
-    for($i = 1;$i <= $num;$i++) {
+    for($i = 1;$i <= $num;$i++)
+    {
         echo " <div class=\"row\"><label for = \"title$i\">$title </label><input type = \"text\" name = \"userfile$i-title\" id=\"title$i\" /></div>
         <div class=\"row\"><label for = \"tags$i\">$tags </label><input type = \"text\" name = \"userfile$i-tags\" id=\"tags$i\" /></div>
 			<div class=\"row\"><label for = \"userfile$i\">$file </label><input type=\"file\" id = \"userfile$i\" name=\"userfile$i\" /><div style=\"clear:left\"></div>";
     }
-} elseif ($action == "addfx-all") {
+} elseif ($action == "addfx-all")
+{
     $templ = $url . "managesearch.php?action=search&amp;query={searchTerms}";
     $templ2 = $url . "managesearch.php?action=searchjson&amp;query={searchTerms}";
     $fav = $url . "templates/standard/images/favicon.ico";
@@ -160,7 +172,8 @@ if ($action == "timeline1next") {
 
 <AdultContent>false</AdultContent>
 </OpenSearchDescription>";
-} elseif ($action == "addfx-project") {
+} elseif ($action == "addfx-project")
+{
     $templ = $url . "managesearch.php?action=projectsearch&amp;project=$project&amp;query={searchTerms}";
     $templ2 = $url . "managesearch.php?action=searchjson-project&amp;project=$project&amp;query={searchTerms}";
     $fav = $url . "templates/standard/images/favicon.ico";
@@ -182,8 +195,10 @@ if ($action == "timeline1next") {
 
 <AdultContent>false</AdultContent>
 </OpenSearchDescription>";
-} elseif ($action == "jsonfiles") {
-    if (!chkproject($userid, $id)) {
+} elseif ($action == "jsonfiles")
+{
+    if (!chkproject($userid, $id))
+    {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "$errtxt<br>$noperm");
@@ -193,21 +208,28 @@ if ($action == "timeline1next") {
 
     $myfile = new datei();
     $ordner = $myfile->getProjectFiles($id);
-    if (!empty($ordner)) {
+    if (!empty($ordner))
+    {
         $json = "var tinyMCEImageList = new Array(\n";
-        foreach($ordner as $file) {
-            if ($file["imgfile"] == 1) {
+        foreach($ordner as $file)
+        {
+            if ($file["imgfile"] == 1)
+            {
                 $json .= "[\"$file[datei]\", \"$file[datei]\"],\n";
             }
         }
         $json = substr($json, 0, strlen($json)-2);
         $json .= ");";
-    } else {
+    }
+    else
+    {
         $json = "";
     }
     echo $json;
-} elseif ($action == "fileview") {
-    if (!chkproject($userid, $id)) {
+} elseif ($action == "fileview")
+{
+    if (!chkproject($userid, $id))
+    {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "$errtxt<br>$noperm");
@@ -222,44 +244,101 @@ if ($action == "timeline1next") {
     $myfile = new datei();
     $ordner = $myfile->getProjectFiles($id, 1000000, $folder);
     $finfiles = array();
-    if (!empty($ordner)) {
-        foreach($ordner as $file) {
-            array_push($finfiles, $file);
+    if (!empty($ordner))
+    {
+        foreach($ordner as $file)
+        {
+
+            if ($file["visible"])
+            {
+                $filevis = unserialize($file["visible"]);
+
+                if (is_array($filevis))
+                {
+                    //array_push($filevis, 18);
+                    if (in_array($userpermissions["ID"], $filevis))
+                    {
+                        array_push($finfiles, $file);
+                    }
+                }
+                else
+                {
+                    array_push($finfiles, $file);
+                }
+            }
+            else
+            {
+                array_push($finfiles, $file);
+            }
         }
     }
     $filenum = count($finfiles);
-    if (empty($finfiles)) {
+    if (empty($finfiles))
+    {
         $filenum = 0;
     }
 
-    if ($folder == 0) {
+    $filenum = count($finfiles);
+    if (empty($finfiles))
+    {
+        $filenum = 0;
+    }
+
+    if ($folder == 0)
+    {
         $folders = $myfile->getProjectFolders($id);
-        $foldername = "";
-        $thefolder = array("parent" => 0);
-    } else {
+		$foldername = "";
+		$thefolder = array("parent"=>0);
+    }
+    else
+    {
         $folders = $myfile->getProjectFolders($id, $folder);
         $thefolder = $myfile->getFolder($folder);
-        $foldername = $thefolder["abspath"];
+        $foldername = $thefolder["name"];
     }
 
-    $finfolders = $folders;
+    $finfolders = array();
+    if (!empty($folders))
+    {
+        foreach($folders as $folder)
+        {
+            if ($folder["visible"])
+            {
+                $foldvis = unserialize($folder["visible"]);
 
+                if (is_array($foldvis))
+                {
+                    if (in_array($userpermissions["ID"], $foldvis))
+                    {
+                        array_push($finfolders, $folder);
+                    }
+                }
+                else
+                {
+                    array_push($finfolders, $folder);
+                }
+            }
+            else
+            {
+                array_push($finfolders, $folder);
+            }
+        }
+
+        $template->assign("folders", $finfolders);
+    }
     $template->assign("filenum", $filenum);
     $template->assign("foldername", $foldername);
-    if (!$thefolder["parent"]) {
-        $thefolder["parent"] = 0;
-    }
-
-    $template->assign("folders", $finfolders);
     $template->assign("folderid", $thefolder["parent"]);
     $template->assign("langfile", $langfile);
-    $template->assign("theAction", "fileview");
     SmartyPaginate::assign($template);
     $template->assign("files", $finfiles);
     $template->assign("postmax", $POST_MAX_SIZE);
     $template->display("fileview.tpl");
-} elseif ($action == "fileview_list") {
-    if (!chkproject($userid, $id)) {
+}
+elseif ($action == "fileview_list")
+{
+    if (!chkproject($userid, $id))
+    {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "$errtxt<br>$noperm");
@@ -274,39 +353,100 @@ if ($action == "timeline1next") {
     $myfile = new datei();
     $ordner = $myfile->getProjectFiles($id, 1000000, $folder);
     $finfiles = array();
-    if (!empty($ordner)) {
-        foreach($ordner as $file) {
-            array_push($finfiles, $file);
+    if (!empty($ordner))
+    {
+        foreach($ordner as $file)
+        {
+
+            if ($file["visible"])
+            {
+                $filevis = unserialize($file["visible"]);
+
+                if (is_array($filevis))
+                {
+                    //array_push($filevis, 18);
+                    if (in_array($userpermissions["ID"], $filevis))
+                    {
+                        array_push($finfiles, $file);
+                    }
+                }
+                else
+                {
+                    array_push($finfiles, $file);
+                }
+            }
+            else
+            {
+                array_push($finfiles, $file);
+            }
         }
     }
     $filenum = count($finfiles);
-    if (empty($finfiles)) {
+    if (empty($finfiles))
+    {
         $filenum = 0;
     }
 
-    if ($folder == 0) {
-        $folders = $myfile->getProjectFolders($id);
-    } else {
-        $folders = $myfile->getProjectFolders($id, $folder);
-        $thefolder = $myfile->getFolder($folder);
-        $foldername = $thefolder["abspath"];
+    $filenum = count($finfiles);
+    if (empty($finfiles))
+    {
+        $filenum = 0;
     }
 
-    $finfolders = $folders;
+    if ($folder == 0)
+    {
+        $folders = $myfile->getProjectFolders($id);
+    }
+    else
+    {
+        $folders = $myfile->getProjectFolders($id, $folder);
+        $thefolder = $myfile->getFolder($folder);
+        $foldername = $thefolder["name"];
+    }
 
-    $template->assign("folders", $finfolders);
+    $finfolders = array();
+    if (!empty($folders))
+    {
+        foreach($folders as $folder)
+        {
+            if ($folder["visible"])
+            {
+                $foldvis = unserialize($folder["visible"]);
 
+                if (is_array($foldvis))
+                {
+                    if (in_array($userpermissions["ID"], $foldvis))
+                    {
+                        array_push($finfolders, $folder);
+                    }
+                }
+                else
+                {
+                    array_push($finfolders, $folder);
+                }
+            }
+            else
+            {
+                array_push($finfolders, $folder);
+            }
+        }
+
+        $template->assign("folders", $finfolders);
+    }
     $template->assign("filenum", $filenum);
     $template->assign("foldername", $foldername);
     $template->assign("folderid", $thefolder["parent"]);
     $template->assign("langfile", $langfile);
-    $template->assign("theAction", "fileview_list");
     SmartyPaginate::assign($template);
     $template->assign("files", $finfiles);
     $template->assign("postmax", $POST_MAX_SIZE);
     $template->display("fileview_list.tpl");
-} elseif ($action == "folderview") {
-    if (!chkproject($userid, $id)) {
+}
+
+elseif ($action == "folderview")
+{
+    if (!chkproject($userid, $id))
+    {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "$errtxt<br>$noperm");
@@ -321,55 +461,8 @@ if ($action == "timeline1next") {
     $template->assign("langfile", $langfile);
     $template->assign("ordner", $ordner);
     $template->display("folderview.tpl");
-} elseif ($action == "newcal") {
-    $thisd = date("j");
-    $thism = date("n");
-    $thisy = date("Y");
-
-    $m = getArrayVal($_GET, "m");
-    $y = getArrayVal($_GET, "y");
-    if (!$m) {
-        $m = $thism;
-    }
-    if (!$y) {
-        $y = $thisy;
-    }
-
-    $nm = $m + 1;
-    $pm = $m -1;
-    if ($nm > 12) {
-        $nm = 1;
-        $ny = $y + 1;
-    } else {
-        $ny = $y;
-    }
-    if ($pm < 1) {
-        $pm = 12;
-        $py = $y-1;
-    } else {
-        $py = $y;
-    }
-
-    $today = date("d");
-
-    $calobj = new calendar();
-    $cal = $calobj->getCal($m, $y);
-    $weeks = $cal->calendar;
-    // print_r($weeks);
-    $mstring = strtolower(date('F', mktime(0, 0, 0, $m, 1, $y)));
-    $mstring = $langfile[$mstring];
-    $template->assign("mstring", $mstring);
-
-    $template->assign("m", $m);
-    $template->assign("y", $y);
-    $template->assign("thism", $thism);
-    $template->assign("thisd", $thisd);
-    $template->assign("thisy", $thisy);
-    $template->assign("nm", $nm);
-    $template->assign("pm", $pm);
-    $template->assign("ny", $ny);
-    $template->assign("py", $py);
-    $template->assign("weeks", $weeks);
-    $template->display("calbody.tpl");
+} elseif ($action == "newcal")
+{
+include("ganttshow.php");
 }
 

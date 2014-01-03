@@ -23,7 +23,7 @@
 
 	<div class="statuswrapper">
 			<ul>
-				{if $userpermissions.projects.close}
+				{if $userpermissions.projects.close && $project.status != 2}
 			        {if $project.status == 1}
 					    <li class="link" id = "closetoggle"><a class="close" href="javascript:closeElement('closetoggle','manageproject.php?action=close&amp;id={$project.ID}');" title="{#close#}"></a></li>
 					{else}
@@ -40,16 +40,21 @@
 				{if $project.budget}
 				<li><a>{#budget#}: {$project.budget}</a></li>
 				{/if}{/if}
+				{if $project.priority}
+					<li><a>{#priority#}: {$project.priority}</a></li>
+				{/if}
 
 				{if $project.daysleft != "" || $project.daysleft == "0"}
 					<li {if $project.daysleft < 0}class="red"{elseif $project.daysleft == "0"}class="green"{/if}><a>{$project.daysleft} {#daysleft#}</a></li>
 				{/if}
 			</ul>
 
-			<div class="status">
-				{$done}%
-				<div class="statusbar"><div class="complete" id = "completed" style="width:0%;"></div></div>
-			</div>
+			{if $project.status != 2}
+				<div class="status">
+					{$done}%
+					<div class="statusbar"><div class="complete" id = "completed" style="width:0%;"></div></div>
+				</div>
+			{/if}
 	</div>
 
 			{*Edit Task*}
@@ -79,12 +84,6 @@
 				<a href="javascript:void(0);" id="milehead_toggle" class="win_block" onclick = "toggleBlock('milehead');"></a>
 
 				<div class="wintools">
-					<!-- <div class="export-main">
-						<a class="export"><span>{#export#}</span></a>
-						<div class="export-in"  style="width:23px;left: -23px;"> {*at one item*}
-							<a class="ical" href="managetask.php?action=ical"><span>{#icalexport#}</span></a>
-						</div>
-					</div>-->
 					<div class = "progress" id = "progress" style = "display:none;">
 						<img src = "templates/standard/images/symbols/loader-cal.gif" />
 					</div>
@@ -109,21 +108,10 @@
 
 
 {*Timetracker*}
-{if $userpermissions.timetracker.add}
+{if $userpermissions.timetracker.add && $project.status != 2}
 <div class="timetrack">
 	<div class="headline">
 		<a href="javascript:void(0);" id="trackerhead_toggle" class="win_block" onclick = "toggleBlock('trackerhead');"></a>
-
-		<!-- Export-block
-		<div class="wintools">
-			<div class="export-main">
-				<a class="export"><span>{#export#}</span></a>
-				<div class="export-in"  style="width:23px;left: -23px;"> {*at one item*}
-					<a class="ical" href="managetask.php?action=ical"><span>{#icalexport#}</span></a>
-				</div>
-			</div>
-		</div>
-		-->
 
 		<h2>
 			<a href="managetimetracker.php?action=showproject&amp;id={$project.ID}" title="{#timetracker#}"><img src="./templates/standard/images/symbols/timetracker.png" alt="" />{#timetracker#}</a>
@@ -144,9 +132,11 @@
 
 
 {*Activity Log*}
-<div class="neutral">
-	{include file="log.tpl" }
-</div>
+{if $project.status != 2}
+	<div class="neutral">
+		{include file="log.tpl" }
+	</div>
+{/if}
 {*Activity Log End*}
 
 

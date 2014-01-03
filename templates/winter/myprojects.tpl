@@ -62,9 +62,10 @@
 					<thead>
 						<tr>
 							<th class="a"></th>
-							<th class="b">{#project#}</th>
-							<th class="c">{#done#}</th>
-							<th class="d" style="text-align:right">{#daysleft#}&nbsp;&nbsp;</th>
+							<th class="b" style="width: 294px;">{#project#}</th>
+							<th class="c" style="width:150px">{#done#}</th>
+							<th class="cf" style="width:50px">{#priority#}</th>
+							<th class="d" style="width:20px; text-align:right;">{#daysleft#}</th>
 							<th class="tools"></th>
 						</tr>
 					</thead>
@@ -79,7 +80,7 @@
 
 					{*Color-Mix*}
 					{if $smarty.section.project.index % 2 == 0}
-					<tbody class="color-a" id="proj_{$myprojects[project].ID}">
+					<tbody class="colortext-align:right"-a" id="proj_{$myprojects[project].ID}">
 					{else}
 					<tbody class="color-b" id="proj_{$myprojects[project].ID}">
 					{/if}
@@ -89,16 +90,13 @@
 								<div class="toggle-in">
 								<span class="acc-toggle" onclick="javascript:accord_projects.activate($$('#acc-projects .accordion_toggle')[{$smarty.section.project.index}]);toggleAccordeon('acc-projects',this);"></span>
 									<a href="manageproject.php?action=showproject&amp;id={$myprojects[project].ID}" title="{$myprojects[project].name}">
-										{if $myprojects[project].name != ""}
 										{$myprojects[project].name|truncate:30:"...":true}
-										{else}
-										{$myprojects[project].desc|truncate:30:"...":true}
-										{/if}
 									</a>
 								</div>
 							</td>
 							<td><div class="statusbar_b"><div class="complete" id = "completed" style="width:{$myprojects[project].done}%;"></div></div><span>{$myprojects[project].done}%</span></td>
-							<td style="text-align:right">{$myprojects[project].daysleft}&nbsp;&nbsp;</td>
+							<td>{$myprojects[project].priority}</td>
+							<td style="text-align:right">{$myprojects[project].daysleft}</td>
 							<td class="tools">
 							     {if $userpermissions.projects.edit}
 								<a class="tool_edit" href="manageproject.php?action=editform&amp;id={$myprojects[project].ID}" title="{#edit#}"></a>
@@ -137,9 +135,10 @@
 
 						<tr>
 							<td class="a"></td>
-							<td class="b"><span id="toggle-done" class="acc-toggle">{#closedprojects#}</span></td>
-							<td class="c"></td>
-							<td class="d"></td>
+							<td class="b" style="width:294px;"><span id="toggle-done" class="acc-toggle">{#closedprojects#}</span></td>
+							<td class="c" style="width:150px"></td>
+							<td class="cf" style="width:50px"></td>
+							<td class="d" style="width:20px"></td>
 							<td class="tools"></td>
 						</tr>
 
@@ -158,20 +157,17 @@
 					{/if}
 						<tr>
 							<td class="a">{if $userpermissions.projects.add}<a class="butn_checked" href="manageproject.php?action=open&amp;id={$oldprojects[clopro].ID}" title="{#open#}"></a>{/if}</td>
-							<td class="b">
+							<td class="b" style="width: 294px;">
 								<div class="toggle-in">
 								<span class="acc-toggle" onclick="javascript:accord_oldprojects.activate($$('#acc-oldprojects .accordion_toggle')[{$smarty.section.clopro.index}]);toggleAccordeon('acc-oldprojects',this);"></span>
 									<a href="manageproject.php?action=showproject&amp;id={$oldprojects[clopro].ID}" title="{$oldprojects[clopro].name}">
-										{if $oldprojects[clopro].name != ""}
-										{$oldprojects[clopro].name|truncate:30:"...":true}
-										{else}
-										{$oldprojects[clopro].desc|truncate:30:"...":true}
-										{/if}
+									{$oldprojects[clopro].name|truncate:30:"...":true}
 									</a>
 								</div>
 							</td>
-							<td class="c"></td>
-							<td class="d" style="text-align:right">{$oldprojects[clopro].daysleft}&nbsp;&nbsp;</td>
+							<td class="c" style="width:150px"></td>
+							<td class="cf" style="width:50px">{$oldprojects[clopro].priority}</td>
+							<td class="d" style="width:20px; text-align:right">{$oldprojects[clopro].daysleft}</td>
 							<td class="tools">
 								{if $userpermissions.projects.edit}
 								<a class="tool_edit" href="manageproject.php?action=editform&amp;id={$oldprojects[clopro].ID}" title="{#edit#}"></a>

@@ -21,12 +21,22 @@
 
 			<h2>{#edittasklist#}</h2>
 
-
-					<form novalidate class="main" method="post" action="managetasklist.php?action=edit&amp;id={$project.ID}&amp;tlid={$tasklist.ID}" {literal}onsubmit="return validateCompleteForm(this);"{/literal}>
+			
+					<form class="main" method="post" action="managetasklist.php?action=edit&amp;id={$project.ID}&amp;tlid={$tasklist.ID}" {literal}onsubmit="return validateCompleteForm(this);"{/literal}>
 					<fieldset>
 
 						<div class="row"><label for="name">{#name#}:</label><input type="text" value="{$tasklist.name}" name="name" id="name" required="1" realname="{#name#}" /></div>
 						<div class="row"><label for="desc">{#description#}:</label><div class="editor"><textarea name="desc" id="desc"  rows="3" cols="1" >{$tasklist.desc}</textarea></div></div>
+
+						<div class="row">
+							<label for="priority" >{#priority#}:</label>
+							<select name = "priority" id="priority" required = "0" realname = "{#priority#}">
+								<option value="">{#chooseone#}</option>
+								<option value="{#low#}" {if $tasklist.priority == #low#}selected{/if}>{#low#}</option>
+								<option value="{#medium#}" {if $tasklist.priority == #medium#}selected{/if}>{#medium#}</option>
+								<option value="{#high#}" {if $tasklist.priority == #high#}selected{/if}>{#high#}</option>
+							</select>
+						</div>
 
 						<div class="row">
 						<label for="milestone">{#milestone#}:</label>
@@ -49,8 +59,8 @@
 					</form>
 
 			</div> {*block_in_wrapper end*}
-
-
+			
+			
 {if $showhtml != "no"}
 <div class="content-spacer"></div>
 </div> {*Tasks END*}

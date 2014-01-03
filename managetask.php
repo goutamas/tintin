@@ -14,6 +14,7 @@ $mode = getArrayVal($_GET, "mode");
 $tid = getArrayVal($_GET, "tid");
 $end = getArrayVal($_POST, "end");
 $project = getArrayVal($_POST, "project");
+$priority = getArrayVal($_POST, "priority");
 $assigned = getArrayVal($_POST, "assigned");
 $tasklist = getArrayVal($_POST, "tasklist");
 $text = getArrayVal($_POST, "text");
@@ -24,6 +25,7 @@ $id = getArrayVal($_GET, "id");
 $project = array();
 $project['ID'] = $id;
 $template->assign("project", $project);
+
 // define the active tab in the project navigation
 $classes = array("overview" => "overview", "msgs" => "msgs", "tasks" => "tasks_active", "miles" => "miles", "files" => "files", "users" => "users", "tracker" => "tracking");
 $template->assign("classes", $classes);
@@ -67,7 +69,7 @@ if ($action == "addform") {
         die();
     }
     // add the task
-    $tid = $task->add($end, $title, $text, $tasklist, $id);
+    $tid = $task->add($end, $title, $text, $tasklist, $id, $priority);
     // if tasks was added and mailnotify is activated, send an email
     if ($tid) {
         foreach($assigned as $member) {
@@ -75,15 +77,20 @@ if ($action == "addform") {
         }
 
         if ($settings["mailnotify"]) {
-            foreach($assigned as $member) {
-                $usr = (object) new user();
-                $user = $usr->getProfile($member);
-                if (!empty($user["email"]) && $userid != $user["ID"]) {
-                    // send email
-                    $themail = new emailer($settings);
+			$projobj = new project();
+			$theproject = $projobj->getProject($project["ID"]);
+			if ($theproject["status"] != 2)
+			{
+				foreach($assigned as $member) {
+					$usr = (object) new user();
+					$user = $usr->getProfile($member);
 
-                    $themail->send_mail($user["email"], $langfile["taskassignedsubject"] , $langfile["hello"] . ",<br /><br/>" . $langfile["taskassignedtext"] . " <a href = \"" . $url . "managetask.php?action=showtask&id=$id&tid=$tid\">$title</a>");
-                }
+					if (!empty($user["email"]) && $userid != $user["ID"]) {
+						// send email
+						$themail = new emailer($settings);
+						$themail->send_mail($user["email"], $langfile["taskassignedsubject"] , $langfile["hello"] . ",<br /><br/>" . $langfile["taskassignedtext"] . " <a href = \"" . $url . "managetask.php?action=showtask&id=$id&tid=$tid\">$title</a>");
+					}
+				}
             }
         }
         $loc = $url . "managetask.php?action=showproject&id=$id&mode=added";
@@ -114,7 +121,6 @@ if ($action == "addform") {
     $thistask['userid'] = $user[0];
 
     $tmp = $task->getUsers($thistask['ID']);
-
     if ($tmp) {
         foreach ($tmp as $value) {
             $thistask['users'][] = $value[0];
@@ -128,9 +134,6 @@ if ($action == "addform") {
     $template->assign("tl", $tl);
     $template->assign("task", $thistask);
     $template->assign("pid", $id);
-    $template->assign("showhtml", "no");
-    $template->assign("showheader", "no");
-    $template->assign("async", "yes");
     $template->display("edittask.tpl");
 } elseif ($action == "edit") {
     // check if user has appropriate permissions
@@ -142,7 +145,7 @@ if ($action == "addform") {
         die();
     }
     // edit the task
-    if ($task->edit($tid, $end, $title, $text, $tasklist)) {
+    if ($task->edit($tid, $end, $title, $text, $tasklist, $priority)) {
         $redir = urldecode($redir);
         if (!empty($assigned)) {
             foreach($assigned as $assignee) {
@@ -257,13 +260,6 @@ if ($action == "addform") {
         $template->assign("deassigntask", 0);
     }
 } elseif ($action == "showproject") {
-    if (!$userpermissions["tasks"]["view"]) {
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
-    }
     if (!chkproject($userid, $id)) {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];
@@ -276,31 +272,33 @@ if ($action == "addform") {
     $oldlists = $tasklist->getProjectTasklists($id, 0);
 
     $myproject = new project();
-    $project_members = $myproject->getProjectMembers($id, $myproject->countMembers($id));
-
     $milestone = new milestone();
     $milestones = $milestone->getAllProjectMilestones($id);
 
     $pro = $myproject->getProject($id);
     $projectname = $pro["name"];
     $title = $langfile['tasks'];
+	
+	if ($pro["status"] == 2)
+	{
+		// Project is a template, make all users assignable
+		$user = (object) new user();
+		$project_members = $user->getAllUsers();
+	}
+	else
+	{
+	    $project_members = $myproject->getProjectMembers($id, $myproject->countMembers($id));
+	}
 
     $template->assign("title", $title);
+    $template->assign("project",$pro);
     $template->assign("milestones", $milestones);
     $template->assign("projectname", $projectname);
     $template->assign("assignable_users", $project_members);
-
     $template->assign("lists", $lists);
     $template->assign("oldlists", $oldlists);
     $template->display("projecttasks.tpl");
 } elseif ($action == "showtask") {
-    if (!$userpermissions["tasks"]["view"]) {
-        $errtxt = $langfile["nopermission"];
-        $noperm = $langfile["accessdenied"];
-        $template->assign("errortext", "$errtxt<br>$noperm");
-        $template->display("error.tpl");
-        die();
-    }
     if (!chkproject($userid, $id)) {
         $errtxt = $langfile["notyourproject"];
         $noperm = $langfile["accessdenied"];

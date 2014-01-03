@@ -10,7 +10,7 @@
 			<span class="info_in_yellow"><img src="templates/standard/img/symbols/tasklist.png" alt=""/>{#tasklistwasedited#}</span>
 		{/if}
 	</div>
-
+	
 	{literal}
 		<script type = "text/javascript">
 			apperar = new Effect.Appear('systemmsg', { duration: 2.0 })
@@ -34,7 +34,7 @@
 				{/if}
 			{/if}
 			{if $userpermissions.tasks.edit}
-				<li class="link"><a class="edit" href="javascript:void(0);" id="edit_butn" onclick="blindtoggle('form_edit');toggleClass(this,'edit-active','edit');toggleClass('sm_tasklist','smooth','nosmooth');" title="{#edit#}"></a></li>
+				<li class="link"><a class="edit" href="javascript:void(0);"  id="edit_butn" onclick="blindtoggle('form_edit');toggleClass(this,'edit-active','edit');toggleClass('sm_tasklist','smooth','nosmooth');" title="{#edit#}"></a></li>
 			{/if}
 			{if $userpermissions.tasks.del}
 				<li class="link"><a class="del" href="javascript:void(0);" onclick="confirmit('{#confirmdel#}','managetasklist.php?action=del&amp;tlid={$tasklist.ID}&amp;id={$project.ID}');" title="{#delete#}"></a></li>
@@ -42,15 +42,18 @@
 			{if $tasklist.desc}
 				<li class="link" onclick="blindtoggle('descript');toggleClass('desctoggle','desc_active','desc');"><a class="desc" id="desctoggle" href="#" title="{#open#}">{#description#}</a></li>
 			{/if}
+			{if $tasklist.priority}
+				<li><a>{#priority#}: {$tasklist.priority}</a></li>
+			{/if}
 			<li><a>{#start#}: {$tasklist.startstring}</a></li>
 		</ul>
 	</div>
-
-	{*Edit Tasklist*}
+	
+	{*Edit Task*}
 	{if $userpermissions.tasks.edit}
-		<div id="form_edit" class="addmenue" style = "display:none;clear:both;">
+		<div id = "form_edit" class="addmenue" style = "display:none;clear:both;">
 			<div class="content-spacer"></div>
-			{include file="edittasklist.tpl" showhtml="no"}
+			{include file="edittasklist.tpl" showhtml="no" }
 		</div>
 	{/if}
 
@@ -92,16 +95,17 @@
 				<thead>
 					<tr>
 						<th class="a"></th>
-						<th class="b">{#tasks#}</th>
-						<th class="c">{#user#}</th>
-						<th class="days" style="text-align:right">{#daysleft#}&nbsp;&nbsp;</th>
+						<th class="b" style="width:330px;">{#tasks#}</th>
+						<th class="c" style="width:150px;">{#user#}</th>
+						<th class="cf" style="width:50px">{#priority#}</th>
+						<th class="days" style="width:27px; text-align:right;">{#daysleft#}</th>
 						<th class="tools"></th>
 					</tr>
 				</thead>
 
 				<tfoot>
 					<tr>
-						<td colspan="5"></td>
+						<td colspan="6"></td>
 					</tr>
 				</tfoot>
 
@@ -128,11 +132,11 @@
 									</div>
 								</td>
 								<td><a href="manageuser.php?action=profile&amp;tlid={$tasks[task].user_id}&amp;id={$project.ID}">{$tasks[task].user|truncate:23:"...":true}</a></td>
-								<td style="text-align:right">{$tasks[task].daysleft}&nbsp;&nbsp;</td>
+								<td>{$tasks[task].priority}</td>
+								<td style="text-align:right;">{$tasks[task].daysleft}</td>
 								<td class="tools">
 									{if $userpermissions.tasks.edit}
-										<a class="tool_edit" href="javascript:void(0);"  onclick = "change('managetask.php?action=editform&amp;tid={$tasks[task].ID}&amp;id={$project.ID}','form_addtask');toggleClass(this,'tool_edit_active','tool_edit');blindtoggle('form_addtask');" title="{#edit#}"></a>
-									{/if}
+									<a class="tool_edit" href="managetask.php?action=editform&amp;tid={$tasks[task].ID}&amp;id={$project.ID}" title="{#edit#}"></a>{/if}
 									{if $userpermissions.tasks.del}
 									<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'task_{$tasks[task].ID}\',\'managetask.php?action=del&amp;tid={$tasks[task].ID}&amp;id={$project.ID}\')');"  title="{#delete#}"></a>
 									{/if}
@@ -140,7 +144,7 @@
 							</tr>
 
 							<tr class="acc">
-								<td colspan="5">
+								<td colspan="6">
 									<div class="accordion_toggle"></div>
 									<div class="accordion_content">
 										<div class="acc-in">
@@ -160,6 +164,7 @@
 							<td>{#notasks#}</td>
 							<td></td>
 							<td></td>
+							<td></td>
 							<td class="tools"></td>
 						</tr>
 					</tbody>
@@ -169,19 +174,20 @@
 			{*Tasks donetasks*}
 			{if $tasklist.donetasknum > 0}
 				<div id="done_2" class="doneblock">
-
+					
 					<table class="second-thead" cellpadding="0" cellspacing="0" border="0" onclick="blindtoggle('doneblock_{$project.ID}');toggleClass('donebutn_{$project.ID}','butn_link_active','butn_link');toggleClass('toggle-done-{$project.ID}','acc-toggle','acc-toggle-active');">
 						<tr>
 							<td class="a"></td>
-							<td class="b"><span id="toggle-done-{$project.ID}" class="acc-toggle-active">{#donetasks#}</span></td>
-							<td class="c"></td>
-							<td class="days"></td>
+							<td class="b" style="width:330px;"><span id="toggle-done-{$project.ID}" class="acc-toggle-active">{#donetasks#}</span></td>
+							<td class="c" style="width:150px;"></td>
+							<td class="cf" style="width:50px;"></td>
+							<td class="days" style="width:27px;"></td>
 							<td class="tools"></td>
 						</tr>
 					</table>
 
 					<div class="toggleblock">
-
+					
 						<table cellpadding="0" cellspacing="0" border="0" id = "done_{$project.ID}">
 							{section name=donetask loop=$donetasks}
 								{if $smarty.section.donetask.index % 2 == 0}
@@ -191,7 +197,7 @@
 								{/if}
 									<tr>
 										<td class="a">{if $userpermissions.tasks.close}<a class="butn_checked" href="javascript:closeElement('task_{$donetasks[donetask].ID}','managetask.php?action=open&amp;tid={$donetasks[donetask].ID}&amp;id={$project.ID}');" title="{#open#}"></a>{/if}</td>
-										<td class="b">
+										<td class="b" style="width:330px;">
 											<div class="toggle-in">
 											<span class="acc-toggle" onclick="javascript:done_2.activate($$('#done_2 .accordion_toggle')[{$smarty.section.donetask.index}]);toggleAccordeon('done_{$project.ID}',this);"></span>
 												<a href="managetask.php?action=showtask&amp;tid={$donetasks[donetask].ID}&amp;id={$donetasks[donetask].project}" title="{$donetasks[donetask].title}">
@@ -203,20 +209,20 @@
 												</a>
 											</div>
 										</td>
-										<td class="c"><a href="manageuser.php?action=profile&amp;tlid={$donetasks[donetask].user_id}&amp;id={$project.ID}">{$donetasks[donetask].user|truncate:23:"...":true}</a></td>
-										<td class="days" style="text-align:right">{$donetasks[donetask].daysleft}&nbsp;&nbsp;</td>
+										<td class="c" style="width:150px;"><a href="manageuser.php?action=profile&amp;tlid={$donetasks[donetask].user_id}&amp;id={$project.ID}">{$donetasks[donetask].user|truncate:23:"...":true}</a></td>
+										<td class="cf" style="width:50px;">{$donetasks[donetask].priority}</td>
+										<td class="days" style="width:27px; text-align:right;">{$donetasks[donetask].daysleft}&nbsp;&nbsp;</td>
 										<td class="tools">
 											{if $userpermissions.tasks.edit}
-												<a class="tool_edit" href="javascript:void(0);" onclick="change('managetask.php?action=editform&amp;tid={$donetasks[donetask].ID}&amp;id={$project.ID}','form_addtask');toggleClass(this,'tool_edit_active','tool_edit');blindtoggle('form_addtask');" title="{#edit#}"></a>
-											{/if}
+											<a class="tool_edit" href="managetask.php?action=editform&amp;tid={$donetasks[donetask].ID}&amp;id={$project.ID}" title="{#edit#}"></a>{/if}
 											{if $userpermissions.tasks.del}
-												<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'task_{$donetasks[donetask].ID}\',\'managetask.php?action=del&amp;tid={$donetasks[donetask].ID}&amp;id={$project.ID}\')');" title="{#delete#}"></a>
+											<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'task_{$donetasks[donetask].ID}\',\'managetask.php?action=del&amp;tid={$donetasks[donetask].ID}&amp;id={$project.ID}\')');"  title="{#delete#}"></a>
 											{/if}
 										</td>
 									</tr>
 
 									<tr class="acc">
-										<td colspan="5">
+										<td colspan="6">
 											<div class="accordion_toggle"></div>
 											<div class="accordion_content">
 												<div class="acc-in">
@@ -230,7 +236,7 @@
 								</tbody>
 							{/section} {*Tasks donetasks END*}
 						</table>
-
+						
 					</div> {*toggleblock End*}
 				</div> {*done_block End*}
 			{/if} {*If if $tasklist.donetasknum > 0*}

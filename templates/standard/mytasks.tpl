@@ -74,16 +74,17 @@
 					<thead>
 						<tr>
 							<th class="a"></th>
-							<th class="b"><a href = "managetask.php?action=showproject&amp;id={$myprojects[project].ID}">{#tasks#}</a></th>
-							<th class="c">{#tasklist#}</th>
-							<th class="d" style="text-align:right">{#daysleft#}&nbsp;&nbsp;</th>
+							<th class="b" style="width:240px;"><a href = "managetask.php?action=showproject&amp;id={$myprojects[project].ID}">{#tasks#}</a></th>
+							<th class="c" style="width:240px;">{#tasklist#}</th>
+							<th class="cf" style="width:50px">{#priority#}</th>
+							<th class="d" style="width:27px; text-align:right;">{#daysleft#}</th>
 							<th class="tools"></th>
 						</tr>
 					</thead>
 
 					<tfoot>
 						<tr>
-							<td colspan="5"></td>
+							<td colspan="6"></td>
 						</tr>
 					</tfoot>
 
@@ -112,6 +113,7 @@
 								</div>
 							</td>
 							<td><a href="managetasklist.php?action=showtasklist&amp;&amp;tlid={$myprojects[project].tasks[task].liste}&amp;id={$myprojects[project].ID}">{$myprojects[project].tasks[task].list|truncate:23:"...":true}</a></td>
+							<td>{$myprojects[project].tasks[task].priority}</td>							
 							<td style="text-align:right">{$myprojects[project].tasks[task].daysleft}&nbsp;&nbsp;</td>
 							<td class="tools">
 								{if $userpermissions.tasks.edit}
@@ -124,7 +126,7 @@
 						</tr>
 
 						<tr class="acc">
-							<td colspan="5">
+							<td colspan="6">
 								<div class="accordion_toggle"></div>
 								<div class="accordion_content">
 									<div class="acc-in">
@@ -161,9 +163,10 @@
 
 						<tr>
 							<td class="a"></td>
-							<td class="b"><span id="toggle-done-{$myprojects[project].ID}" class="acc-toggle">{#donetasks#}</span></td>
-							<td class="c"></td>
-							<td class="d"></td>
+							<td class="b" style="width:240px;"><span id="toggle-done-{$myprojects[project].ID}" class="acc-toggle">{#donetasks#}</span></td>
+							<td class="c" style="width:240px;"></td>
+							<td class="cf" style="width:50px"></td>
+							<td class="d" style="width:27px;"></td>
 							<td class="tools"></td>
 						</tr>
 
@@ -182,7 +185,7 @@
 
 							<tr>
 								<td class="a">{if $userpermissions.tasks.close}<a class="butn_checked" href="javascript:closeElement('task_{$myprojects[project].oldtasks[oldtask].ID}','managetask.php?action=open&amp;tid={$myprojects[project].oldtasks[oldtask].ID}&amp;id={$myprojects[project].ID}');" title="{#open#}"></a>{/if}</td>
-								<td class="b">
+								<td class="b" style="width:240px;">
 									<div class="toggle-in">
 									<span class="acc-toggle" onclick="javascript:done_{$myprojects[project].ID}.activate($$('#done_{$myprojects[project].ID} .accordion_toggle')[{$smarty.section.oldtask.index}]);toggleAccordeon('done_{$myprojects[project].ID}',this);"></span>
 										<a href="managetask.php?action=showtask&amp;tid={$myprojects[project].oldtasks[oldtask].ID}&amp;id={$myprojects[project].oldtasks[oldtask].project}" title="{$myprojects[project].oldtasks[oldtask].title}">
@@ -194,8 +197,9 @@
 										</a>
 									</div>
 								</td>
-								<td class="c"><a href="managetasklist.php?action=showtasklist&amp;&amp;tlid={$myprojects[project].oldtasks[oldtask].liste}&amp;id={$myprojects[project].ID}">{$myprojects[project].oldtasks[oldtask].list|truncate:23:"...":true}</a></td>
-								<td class="d" style="text-align:right">{$myprojects[project].oldtasks[oldtask].daysleft}&nbsp;&nbsp;</td>
+								<td class="c" style="width:240px;"><a href="managetasklist.php?action=showtasklist&amp;&amp;tlid={$myprojects[project].oldtasks[oldtask].liste}&amp;id={$myprojects[project].ID}">{$myprojects[project].oldtasks[oldtask].list|truncate:42:"...":true}</a></td>
+								<td class="cf" style="width:50px;">{$myprojects[project].oldtasks[oldtask].priority}</td>
+								<td class="d" style="width:27px; text-align:right;">{$myprojects[project].oldtasks[oldtask].daysleft}</td>
 								<td class="tools">
 									{if $userpermissions.tasks.edit}
 									<a class="tool_edit" href="managetask.php?action=editform&amp;tid={$myprojects[project].oldtasks[oldtask].ID}&amp;id={$myprojects[project].ID}" title="{#edit#}"></a>
@@ -207,7 +211,7 @@
 							</tr>
 
 							<tr class="acc">
-								<td colspan="5">
+								<td colspan="6">
 									<div class="accordion_toggle"></div>
 									<div class="accordion_content">
 										<div class="acc-in">

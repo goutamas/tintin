@@ -19,7 +19,7 @@
 			</div>
 
 			<div class="userwrapper">
-
+				
 				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
 						<td class="avatarcell" valign="top">
@@ -43,7 +43,7 @@
 						<td>
 							<div class="message">
 								<div class="block">
-
+								
 									<table cellpadding="0" cellspacing="0" border="0">
 										<colgroup>
 											<col class="a" />
@@ -138,7 +138,7 @@
 		</div> {*User END*}
 		<div class="content-spacer"></div>
 
-		{if $userpermissions.admin.add}{if $opros|default}{*Projects*}
+		{if $userpermissions.admin.add}{if $opros}{*Projects*}
 			<div class="projects">
 				<div class="headline">
 					<a href="javascript:void(0);" id="projecthead_toggle" class="win_block" onclick = "toggleBlock('projecthead');"></a>
@@ -148,15 +148,15 @@
 					</h2>
 				</div>
 
-				<div class="block" id="projecthead" style = "{$projectstyle|default}">
-
+				<div class="block" id="projecthead" style = "{$projectstyle}">
+					
 					<table cellpadding="0" cellspacing="0" border="0">
 						<thead>
 							<tr>
 								<th class="a"></th>
-								<th class="b">{#project#}</th>
-								<th class="c"></th>
-								<th class="d" style="text-align:right">{#daysleft#}&nbsp;&nbsp;</th>
+								<th class="b" style="width: 294px;">{#project#}</th>
+								<th class="c" style="width:150px">{#priority#}</th>
+								<th class="d" style="width:20px; text-align:right;">{#daysleft#}</th>
 								<th class="tools"></th>
 							</tr>
 						</thead>
@@ -176,7 +176,7 @@
 							{/if}
 								<tr {if $opros[opro].daysleft < 0} class="marker-late"{elseif $opros[opro].daysleft == 0} class="marker-today"{/if}>
 									<td>
-										{if $adminstate|default > 4}
+										{if $adminstate > 4}
 											<a class="butn_check" href="javascript:closeElement('proj_{$opros[opro].ID}','manageproject.php?action=close&amp;id={$opros[opro].ID}');" title="{#close#}"></a>
 										{/if}
 									</td>
@@ -188,8 +188,8 @@
 											</a>
 										</div>
 									</td>
-									<td></td>
-									<td style="text-align:right">{$opros[opro].daysleft}&nbsp;&nbsp;</td>
+									<td>{$opros[opro].priority}</td>
+									<td style="text-align:right">{$opros[opro].daysleft}</td>
 									<td class="tools">
 										<a class="tool_edit" href="manageproject.php?action=editform&amp;id={$opros[opro].ID}" title="{#edit#}" {if !$userpermissions.projects.edit}style="visibility:hidden;" {/if}></a>
 										<a class="tool_del" href="javascript:confirmfunction('{#confirmdel#}','deleteElement(\'proj_{$opros[opro].ID}\',\'manageproject.php?action=del&amp;id={$opros[opro].ID}\')');"  title="{#delete#}" {if !$userpermissions.projects.del}style="visibility:hidden;" {/if}></a>
@@ -253,7 +253,7 @@
 																		</div>
 																	{/if}
 																</div> {*itemwrapper end*}
-
+																
 															</li>
 														{/section}
 													</ul>
@@ -318,17 +318,17 @@
 					</div>
 
 					<div class="nosmooth" id="sm_report">
-
+					
 						<table cellpadding="0" cellspacing="0" border="0">
 							<thead>
 								<tr>
 									<th class="a"></th>
-									<th class="b">{#project#}</th>
-									<th class="cf">{#day#}</th>
-									<th class="cf">{#started#}</th>
-									<th class="cf">{#ended#}</th>
-									<th class="e" style="text-align:right">{#hours#}&nbsp;&nbsp;</th>
-									<th class="tools"></th>
+									<th class="b" style="width:250px;">{#project#}</th>
+									<th class="cf" style="width:33px;">{#day#}</th>
+									<th class="cf" style="width:46px;">{#started#}</th>
+									<th class="cf" style="width:50px;">{#ended#}</th>
+									<th class="e" style="width:43px; style="text-align:right;">{#hours#}</th>
+									<th class="tools" style="width:20px;"></th>
 								</tr>
 							</thead>
 
@@ -399,19 +399,20 @@
 									<td class="tools"></td>
 								</tr>
 							</tbody>
-
-						<tbody class="color-a">
-					<tr>
-						<td colspan="7">
-							<div id="paging" style = "float:right;" >
-								{paginate_prev} {paginate_middle} {paginate_next}
-							</div>
-						</td>
-
-					</tr>
-				</tbody>
+							
+							<tbody class="paging">
+								<tr>
+									<td></td>
+									<td colspan="5">
+										<div id="paging">
+											{paginate_prev} {paginate_middle} {paginate_next}
+										</div>
+									</td>
+									<td class="tools"></td>
+								</tr>
+							</tbody>
 						</table>
-
+						
 					</div> {*smooth End*}
 
 					<div class="tablemenue">
@@ -423,7 +424,7 @@
 			</div> {*timetrack END*}
 		{/if}{/if}
 		<div class="content-spacer"></div>
-
+		
 		{literal}
 			<script type = "text/javascript">
 				var accord_tracker = new accordion('acc-tracker');

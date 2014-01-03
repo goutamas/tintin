@@ -1,6 +1,7 @@
 <?php
 include("init.php");
-if (!isset($_SESSION["userid"])) {
+if (!isset($_SESSION["userid"]))
+{
     $template->assign("loginerror", 0);
     $template->display("login.tpl");
     die();
@@ -15,6 +16,7 @@ $mode = getArrayVal($_GET, "mode");
 
 $name = getArrayVal($_POST, "name");
 $desc = getArrayVal($_POST, "desc");
+$priority = getArrayVal($_POST, "priority");
 $access = getArrayVal($_POST, "email");
 $milestone = getArrayVal($_POST, "milestone");
 
@@ -29,7 +31,8 @@ $classes = array("overview" => "overview",
     "tracker" => "tracking"
     );
 $template->assign("classes", $classes);
-if (!chkproject($userid, $id)) {
+if (!chkproject($userid, $id))
+{
     $errtxt = $langfile["notyourproject"];
     $noperm = $langfile["accessdenied"];
     $template->assign("errortext", "$errtxt<br>$noperm");
@@ -37,8 +40,10 @@ if (!chkproject($userid, $id)) {
     $template->display("error.tpl");
     die();
 }
+$template->assign("mode", $mode);
 
-if ($action == "addform") {
+if ($action == "addform")
+{
     $milestones = $objmilestone->getAllProjectMilestones($id, 10000);
 
     $title = $langfile['addtasklist'];
@@ -47,16 +52,22 @@ if ($action == "addform") {
     $template->assign("milestones", $milestones);
     $template->assign("projectid", $project);
     $template->display("addtasklist.tpl");
-} elseif ($action == "add") {
-    if ($liste->add_liste($id, $name, $desc, 0, $milestone)) {
+} elseif ($action == "add")
+{
+    if ($liste->add_liste($id, $name, $desc, $priority, 0, $milestone))
+    {
         $loc = $url . "managetask.php?action=showproject&id=$id&mode=listadded";
         header("Location: $loc");
-    } else {
+    }
+    else
+    {
         $template->assign("addliste", 0);
     }
 }
-if ($action == "editform") {
-    if (!$userpermissions["tasks"]["edit"]) {
+if ($action == "editform")
+{
+    if (!$userpermissions["tasks"]["edit"])
+    {
         $errtxt = $langfile["nopermission"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "<h2>$errtxt</h2><br>$noperm");
@@ -75,7 +86,7 @@ if ($action == "editform") {
 
     $pro = $myproject->getProject($id);
     $projectname = $pro["name"];
-
+	
     $title = $langfile["edittasklist"];
 
     $template->assign("title", $title);
@@ -85,8 +96,10 @@ if ($action == "editform") {
     $template->assign("tasklist", $tasklist);
     $template->assign("project", $project);
     $template->display("edittasklist.tpl");
-} elseif ($action == "edit") {
-    if (!$userpermissions["tasks"]["edit"]) {
+} elseif ($action == "edit")
+{
+    if (!$userpermissions["tasks"]["edit"])
+    {
         $errtxt = $langfile["nopermission"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "<h2>$errtxt</h2><br>$noperm");
@@ -94,14 +107,19 @@ if ($action == "editform") {
         die();
     }
 
-    if ($liste->edit_liste($tlid, $name, $desc, $milestone)) {
+    if ($liste->edit_liste($tlid, $name, $desc, $priority, $milestone))
+    {
         $loc = $url . "managetasklist.php?action=showtasklist&id=$id&tlid=$tlid&mode=edited";
         header("Location: $loc");
-    } else {
+    }
+    else
+    {
         $template->assign("editliste", 0);
     }
-} elseif ($action == "del") {
-    if (!$userpermissions["tasks"]["del"]) {
+} elseif ($action == "del")
+{
+    if (!$userpermissions["tasks"]["del"])
+    {
         $errtxt = $langfile["nopermission"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "<h2>$errtxt</h2><br>$noperm");
@@ -109,42 +127,56 @@ if ($action == "editform") {
         die();
     }
 
-    if ($liste->del_liste($tlid)) {
+    if ($liste->del_liste($tlid))
+    {
         $loc = $url . "managetask.php?action=showproject&id=$id&mode=listdeleted";
         header("Location: $loc");
-    } else {
+    }
+    else
+    {
         $template->assign("delliste", 0);
     }
-} elseif ($action == "close") {
-    if (!$userpermissions["tasks"]["close"]) {
+} elseif ($action == "close")
+{
+    if (!$userpermissions["tasks"]["close"])
+    {
         $errtxt = $langfile["nopermission"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "<h2>$errtxt</h2><br>$noperm");
         $template->display("error.tpl");
         die();
     }
-    if ($liste->close_liste($tlid)) {
+    if ($liste->close_liste($tlid))
+    {
         $loc = $url . "managetask.php?action=showproject&id=$id&mode=listclosed";
         header("Location: $loc");
-    } else {
+    }
+    else
+    {
         $template->assign("closeliste", 0);
     }
-} elseif ($action == "open") {
-    if (!$userpermissions["tasks"]["edit"]) {
+} elseif ($action == "open")
+{
+    if (!$userpermissions["tasks"]["edit"])
+    {
         $errtxt = $langfile["nopermission"];
         $noperm = $langfile["accessdenied"];
         $template->assign("errortext", "<h2>$errtxt</h2><br>$noperm");
         $template->display("error.tpl");
         die();
     }
-    if ($liste->open_liste($tlid)) {
+	 if ($liste->open_liste($tlid))
+    {
         $loc = $url . "managetask.php?action=showproject&id=$id&mode=listopened";
         header("Location: $loc");
         // echo "ok";
-    } else {
+    }
+    else
+    {
         $template->assign("openliste", 0);
     }
-} elseif ($action == "showtasklist") {
+} elseif ($action == "showtasklist")
+{
     $myproject = (object) new project();
     $project_members = $myproject->getProjectMembers($id);
 
